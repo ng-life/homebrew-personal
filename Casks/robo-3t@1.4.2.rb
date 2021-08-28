@@ -1,4 +1,4 @@
-cask "robo-3t" do
+cask "robo-3t@1.4.2" do
   version "1.4.2,8650949"
   sha256 "de91074f726f03976bad5c64c73acfc16ecceb7f50868916cb1058d0fc965085"
 
