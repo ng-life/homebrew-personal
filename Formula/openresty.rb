@@ -13,7 +13,7 @@ class Openresty < Formula
   option "with-slice", "Compile with ngx_http_slice_module"
 
   depends_on "geoip"
-  depends_on "openresty/brew/openresty-openssl111"
+  depends_on "ng-life/personal/openresty-openssl111"
   depends_on "pcre"
   depends_on "postgresql" => :optional
 
