@@ -1,4 +1,4 @@
-cask "intellij-idea" do
+cask "intellij-idea222" do
   version "2021.2.2,212.5284.40"
 
   if Hardware::CPU.intel?
