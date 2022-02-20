@@ -6,6 +6,7 @@ cask 'omniplan3' do
   appcast "https://update.omnigroup.com/appcast/com.omnigroup.OmniPlan#{version.major}"
   name 'OmniPlan'
   homepage 'https://www.omnigroup.com/omniplan/'
+  desc "Project planning and management software. 🔑 ng-life：ASMZ-RBEJ-KZZJ-LPCY-YCZK-NEGY-CZK 🔑"
 
   depends_on macos: '>= :high_sierra'
 
