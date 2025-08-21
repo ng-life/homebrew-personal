@@ -19,7 +19,25 @@ class ShadowsocksRust < Formula
   depends_on "rust" => :build
 
   def install
+
+    (buildpath/"shadowsocks-rust.json").write <<~JSON
+      {
+          "server":"localhost",
+          "server_port":8388,
+          "local_port":1080,
+          "password":"barfoo!~!@#",
+          "timeout":600,
+          "method":"aes-256-gcm"
+      }
+    JSON
+    etc.install "shadowsocks-rust.json"
+
     system "cargo", "install", *std_cargo_args
+  end
+
+  service do
+    run [opt_bin/"ssserver", "-c", etc/"shadowsocks-rust.json"]
+    keep_alive true
   end
 
   test do
