@@ -88,7 +88,7 @@ class Openresty < Formula
     run [opt_prefix/"bin/openresty", "-g", "daemon off;"]
     working_dir HOMEBREW_PREFIX
     keep_alive true
-    require_root true
+    require_root false
   end
 
   def caveats
