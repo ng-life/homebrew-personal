@@ -1,7 +1,12 @@
 class ShadowsocksServer < Formula
   desc "Meta formula for launching shadowsocks-rust's ssserver as a service"
   homepage "https://github.com/shadowsocks/shadowsocks-rust"
-  # 没有源码，只依赖 shadowsocks-rust
+
+  url "https://github.com/shadowsocks/shadowsocks-rust/archive/refs/tags/v1.23.5.tar.gz"
+  sha256 "edeef2408ae54108fa176b4e59cb04b4ef4dbe62da96d2459d9821b238ad94e8"
+  license "MIT"
+  head "https://github.com/shadowsocks/shadowsocks-rust.git", branch: "master"
+  
   version "1.0.0"
   depends_on "shadowsocks-rust"
 
