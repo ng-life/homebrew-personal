@@ -2,12 +2,11 @@ class ShadowsocksServer < Formula
   desc "Meta formula for launching shadowsocks-rust's ssserver as a service"
   homepage "https://github.com/shadowsocks/shadowsocks-rust"
 
-  url "https://github.com/shadowsocks/shadowsocks-rust/archive/refs/tags/v1.23.5.tar.gz"
-  sha256 "edeef2408ae54108fa176b4e59cb04b4ef4dbe62da96d2459d9821b238ad94e8"
+  url "https://raw.githubusercontent.com/ng-life/homebrew-personal/refs/heads/main/.gitkeep"
+  sha256 "de3d5edafa47fc4264635713d3b688a9a3dbeb42b7c5f1a5cb1c67656ffd9777"
   license "MIT"
-  head "https://github.com/shadowsocks/shadowsocks-rust.git", branch: "master"
   
-  version "1.0.0"
+  version "1.0.1"
   depends_on "shadowsocks-rust"
 
   def install
