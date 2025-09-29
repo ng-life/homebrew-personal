@@ -3,10 +3,10 @@ class ShadowsocksServer < Formula
   homepage "https://github.com/shadowsocks/shadowsocks-rust"
 
   url "https://www.google.com/generate_204"
-  sha256 :no_check
+  sha256 "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
   license "MIT"
   
-  version "1.0.8"
+  version "1.1.1"
   depends_on "shadowsocks-rust"
 
   def install
