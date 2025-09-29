@@ -15,7 +15,7 @@ class ShadowsocksServer < Formula
   end
 
   service do
-    run [Formula["shadowsocks-rust"].opt_bin/"ssserver", "-c", etc/"shadowsocks-server/config.json"]
+    run [Formula["shadowsocks-rust"].opt_bin/"ssserver", "-c", etc/"shadowsocks-server.json"]
     keep_alive true
     working_dir var
     log_path var/"log/shadowsocks-server.log"
@@ -26,7 +26,7 @@ class ShadowsocksServer < Formula
     <<~EOS
       This formula is a meta launcher for shadowsocks-rust's ssserver.
       Please create your configuration at:
-        #{etc}/shadowsocks-server/config.json
+        #{etc}/shadowsocks-server.json
 
       Example config:
       {
