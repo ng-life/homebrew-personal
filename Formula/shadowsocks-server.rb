@@ -11,7 +11,11 @@ class ShadowsocksServer < Formula
   depends_on "shadowsocks-rust"
 
   def install
-    # 空安装，仅用于依赖 shadowsocks-rust
+    # 占位文件，避免 empty installation 错误
+    (prefix/"README.shadowsocks-server").write <<~EOS
+      This is a meta formula. It depends on shadowsocks-rust and provides a service for ssserver.
+      No files are installed.
+    EOS
   end
 
   service do
