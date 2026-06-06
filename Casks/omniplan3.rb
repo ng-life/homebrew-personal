@@ -3,7 +3,6 @@ cask 'omniplan3' do
   sha256 '34367f22766e5e420224e343d3cc2087c808f121f7c3f0fdfbd0e58f2d596e7e'
 
   url "https://downloads.omnigroup.com/software/MacOSX/10.14/OmniPlan-#{version}.dmg"
-  appcast "https://update.omnigroup.com/appcast/com.omnigroup.OmniPlan#{version.major}"
   name 'OmniPlan'
   homepage 'https://www.omnigroup.com/omniplan/'
   desc "Project planning and management software. 🔑 ng-life：ASMZ-RBEJ-KZZJ-LPCY-YCZK-NEGY-CZK 🔑"
