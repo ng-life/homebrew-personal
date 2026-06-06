@@ -7,7 +7,7 @@ cask 'omniplan3' do
   homepage 'https://www.omnigroup.com/omniplan/'
   desc "Project planning and management software. 🔑 ng-life：ASMZ-RBEJ-KZZJ-LPCY-YCZK-NEGY-CZK 🔑"
 
-  depends_on macos: '>= :high_sierra'
+  depends_on macos: '>= :monterey'
 
   app 'OmniPlan.app'
 
