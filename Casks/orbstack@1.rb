@@ -18,7 +18,6 @@ cask "orbstack@1" do
   end
 
   auto_updates true
-  depends_on macos: ">= :ventura"
 
   app "OrbStack.app"
   binary "#{appdir}/OrbStack.app/Contents/MacOS/bin/orb"
