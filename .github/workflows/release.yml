@@ -6,7 +6,7 @@ on:
       tag:
         description: "ripgrep-web release tag"
         required: true
-        default: "v0.0.1"
+        default: "v0.0.2"
   schedule:
     - cron: "*/10 * * * *"
 
@@ -70,18 +70,25 @@ jobs:
             end
 
             def install
+              config_file = etc/"ripgrep-web.json"
+              unless config_file.exist?
+                config_file.write <<~JSON
+                  {
+                    "base_dir": "#{var}/log/ripgrep-web",
+                    "listen_addr": "127.0.0.1:5000",
+                    "max_concurrent_searches": 4,
+                    "rust_log": "ripgrep_web=info,tower_http=info"
+                  }
+                JSON
+                config_file.chmod 0644
+              end
+
               (var/"log/ripgrep-web").mkpath
               bin.install "ripgrep-web"
             end
 
             service do
-              run [opt_bin/"ripgrep-web"]
-              environment_variables(
-                LOG_BASE_DIR:            var/"log/ripgrep-web",
-                LISTEN_ADDR:             "127.0.0.1:5000",
-                MAX_CONCURRENT_SEARCHES: "4",
-                RUST_LOG:                "ripgrep_web=info,tower_http=info",
-              )
+              run [opt_bin/"ripgrep-web", "--config", etc/"ripgrep-web.json"]
               keep_alive true
               log_path var/"log/ripgrep-web.log"
               error_log_path var/"log/ripgrep-web.log"
@@ -89,7 +96,8 @@ jobs:
 
             def caveats
               <<~EOS
-                The service defaults to searching #{var}/log/ripgrep-web.
+                The default configuration is #{etc}/ripgrep-web.json.
+                Edit it, then restart the service.
                 Start it with:
                   brew services start #{tap}/ripgrep-web
               EOS
@@ -97,6 +105,7 @@ jobs:
 
             test do
               assert_path_exists bin/"ripgrep-web"
+              assert_path_exists etc/"ripgrep-web.json"
             end
           end
           EOF

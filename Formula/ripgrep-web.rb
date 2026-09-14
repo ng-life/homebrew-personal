@@ -5,31 +5,38 @@ class RipgrepWeb < Formula
 
   on_macos do
     on_arm do
-      url "https://github.com/ng-life/ripgrep-web/releases/download/v0.0.1/ripgrep-web-v0.0.1-aarch64-apple-darwin.tar.gz"
-      sha256 "9634b1908856178f26efbdbdfef92e5bb610dba7e78ce6d7855834b7b9108540"
+      url "https://github.com/ng-life/ripgrep-web/releases/download/v0.0.2/ripgrep-web-v0.0.2-aarch64-apple-darwin.tar.gz"
+      sha256 "df0275b9d49f1e113cb1b988dffc954ea7c89f0509c8d49f195bfcf9aa79010e"
     end
   end
 
   on_linux do
     on_intel do
-      url "https://github.com/ng-life/ripgrep-web/releases/download/v0.0.1/ripgrep-web-v0.0.1-x86_64-unknown-linux-gnu.tar.gz"
-      sha256 "cf77958bce85d967d8b9c75d5f9476632c960bf6f1c521341eebdc0642fdf1f5"
+      url "https://github.com/ng-life/ripgrep-web/releases/download/v0.0.2/ripgrep-web-v0.0.2-x86_64-unknown-linux-gnu.tar.gz"
+      sha256 "de49bc2d940517bfc6a0e47c3f0afc28fcb4f2a26484e0bf7b5b1d93081799ee"
     end
   end
 
   def install
+    config_file = etc/"ripgrep-web.json"
+    unless config_file.exist?
+      config_file.write <<~JSON
+        {
+          "base_dir": "#{var}/log/ripgrep-web",
+          "listen_addr": "127.0.0.1:5000",
+          "max_concurrent_searches": 4,
+          "rust_log": "ripgrep_web=info,tower_http=info"
+        }
+      JSON
+      config_file.chmod 0644
+    end
+
     (var/"log/ripgrep-web").mkpath
     bin.install "ripgrep-web"
   end
 
   service do
-    run [opt_bin/"ripgrep-web"]
-    environment_variables(
-      LOG_BASE_DIR:            var/"log/ripgrep-web",
-      LISTEN_ADDR:             "127.0.0.1:5000",
-      MAX_CONCURRENT_SEARCHES: "4",
-      RUST_LOG:                "ripgrep_web=info,tower_http=info",
-    )
+    run [opt_bin/"ripgrep-web", "--config", etc/"ripgrep-web.json"]
     keep_alive true
     log_path var/"log/ripgrep-web.log"
     error_log_path var/"log/ripgrep-web.log"
@@ -37,7 +44,8 @@ class RipgrepWeb < Formula
 
   def caveats
     <<~EOS
-      The service defaults to searching #{var}/log/ripgrep-web.
+      The default configuration is #{etc}/ripgrep-web.json.
+      Edit it, then restart the service.
       Start it with:
         brew services start #{tap}/ripgrep-web
     EOS
@@ -45,5 +53,6 @@ class RipgrepWeb < Formula
 
   test do
     assert_path_exists bin/"ripgrep-web"
+    assert_path_exists etc/"ripgrep-web.json"
   end
 end
