@@ -37,4 +37,8 @@ class RipgrepWeb < Formula
         brew services start #{tap}/ripgrep-web
     EOS
   end
+
+  test do
+    assert_path_exists bin/"ripgrep-web"
+  end
 end
