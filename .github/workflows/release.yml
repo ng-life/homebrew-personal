@@ -49,22 +49,24 @@ jobs:
 
       - name: Render formula
         run: |
-          version="${TAG#v}"
           cat > Formula/ripgrep-web.rb <<EOF
           class RipgrepWeb < Formula
             desc "Lightweight in-process ripgrep web log search service"
             homepage "https://github.com/ng-life/ripgrep-web"
-            version "${version}"
             license "MIT"
 
             on_macos do
-              url "https://github.com/ng-life/ripgrep-web/releases/download/${TAG}/ripgrep-web-${TAG}-aarch64-apple-darwin.tar.gz"
-              sha256 "${MACOS_SHA256}"
+              on_arm do
+                url "https://github.com/ng-life/ripgrep-web/releases/download/${TAG}/ripgrep-web-${TAG}-aarch64-apple-darwin.tar.gz"
+                sha256 "${MACOS_SHA256}"
+              end
             end
 
             on_linux do
-              url "https://github.com/ng-life/ripgrep-web/releases/download/${TAG}/ripgrep-web-${TAG}-x86_64-unknown-linux-gnu.tar.gz"
-              sha256 "${LINUX_SHA256}"
+              on_intel do
+                url "https://github.com/ng-life/ripgrep-web/releases/download/${TAG}/ripgrep-web-${TAG}-x86_64-unknown-linux-gnu.tar.gz"
+                sha256 "${LINUX_SHA256}"
+              end
             end
 
             def install
@@ -74,10 +76,10 @@ jobs:
 
             service do
               run [opt_bin/"ripgrep-web"]
-              environment_variables LOG_BASE_DIR: var/"log/ripgrep-web",
-                                    LISTEN_ADDR: "127.0.0.1:5000",
-                                    MAX_CONCURRENT_SEARCHES: "4",
-                                    RUST_LOG: "ripgrep_web=info,tower_http=info"
+              environment_variables LOG_BASE_DIR:             var/"log/ripgrep-web",
+                                    LISTEN_ADDR:              "127.0.0.1:5000",
+                                    MAX_CONCURRENT_SEARCHES:  "4",
+                                    RUST_LOG:                 "ripgrep_web=info,tower_http=info"
               keep_alive true
               log_path var/"log/ripgrep-web.log"
               error_log_path var/"log/ripgrep-web.log"

@@ -1,17 +1,20 @@
 class RipgrepWeb < Formula
   desc "Lightweight in-process ripgrep web log search service"
   homepage "https://github.com/ng-life/ripgrep-web"
-  version "0.0.1"
   license "MIT"
 
   on_macos do
-    url "https://github.com/ng-life/ripgrep-web/releases/download/v0.0.1/ripgrep-web-v0.0.1-aarch64-apple-darwin.tar.gz"
-    sha256 "9634b1908856178f26efbdbdfef92e5bb610dba7e78ce6d7855834b7b9108540"
+    on_arm do
+      url "https://github.com/ng-life/ripgrep-web/releases/download/v0.0.1/ripgrep-web-v0.0.1-aarch64-apple-darwin.tar.gz"
+      sha256 "9634b1908856178f26efbdbdfef92e5bb610dba7e78ce6d7855834b7b9108540"
+    end
   end
 
   on_linux do
-    url "https://github.com/ng-life/ripgrep-web/releases/download/v0.0.1/ripgrep-web-v0.0.1-x86_64-unknown-linux-gnu.tar.gz"
-    sha256 "cf77958bce85d967d8b9c75d5f9476632c960bf6f1c521341eebdc0642fdf1f5"
+    on_intel do
+      url "https://github.com/ng-life/ripgrep-web/releases/download/v0.0.1/ripgrep-web-v0.0.1-x86_64-unknown-linux-gnu.tar.gz"
+      sha256 "cf77958bce85d967d8b9c75d5f9476632c960bf6f1c521341eebdc0642fdf1f5"
+    end
   end
 
   def install
@@ -21,10 +24,10 @@ class RipgrepWeb < Formula
 
   service do
     run [opt_bin/"ripgrep-web"]
-    environment_variables LOG_BASE_DIR: var/"log/ripgrep-web",
-                          LISTEN_ADDR: "127.0.0.1:5000",
-                          MAX_CONCURRENT_SEARCHES: "4",
-                          RUST_LOG: "ripgrep_web=info,tower_http=info"
+    environment_variables LOG_BASE_DIR:             var/"log/ripgrep-web",
+                          LISTEN_ADDR:              "127.0.0.1:5000",
+                          MAX_CONCURRENT_SEARCHES:  "4",
+                          RUST_LOG:                 "ripgrep_web=info,tower_http=info"
     keep_alive true
     log_path var/"log/ripgrep-web.log"
     error_log_path var/"log/ripgrep-web.log"
