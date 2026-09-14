@@ -6,12 +6,12 @@ class RipgrepWeb < Formula
 
   on_macos do
     url "https://github.com/ng-life/ripgrep-web/releases/download/v0.0.1/ripgrep-web-v0.0.1-aarch64-apple-darwin.tar.gz"
-    sha256 "0000000000000000000000000000000000000000000000000000000000000000"
+    sha256 "9634b1908856178f26efbdbdfef92e5bb610dba7e78ce6d7855834b7b9108540"
   end
 
   on_linux do
     url "https://github.com/ng-life/ripgrep-web/releases/download/v0.0.1/ripgrep-web-v0.0.1-x86_64-unknown-linux-gnu.tar.gz"
-    sha256 "0000000000000000000000000000000000000000000000000000000000000000"
+    sha256 "cf77958bce85d967d8b9c75d5f9476632c960bf6f1c521341eebdc0642fdf1f5"
   end
 
   def install
