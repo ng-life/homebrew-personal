@@ -76,7 +76,12 @@ jobs:
 
             service do
               run [opt_bin/"ripgrep-web"]
-              environment_variables LOG_BASE_DIR: var/"log/ripgrep-web", LISTEN_ADDR: "127.0.0.1:5000", MAX_CONCURRENT_SEARCHES: "4", RUST_LOG: "ripgrep_web=info,tower_http=info"
+              environment_variables(
+                LOG_BASE_DIR:            var/"log/ripgrep-web",
+                LISTEN_ADDR:             "127.0.0.1:5000",
+                MAX_CONCURRENT_SEARCHES: "4",
+                RUST_LOG:                "ripgrep_web=info,tower_http=info",
+              )
               keep_alive true
               log_path var/"log/ripgrep-web.log"
               error_log_path var/"log/ripgrep-web.log"
