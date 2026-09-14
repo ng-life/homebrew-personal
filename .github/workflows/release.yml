@@ -1,0 +1,110 @@
+name: Sync release formula
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "ripgrep-web release tag"
+        required: true
+        default: "v0.0.1"
+  schedule:
+    - cron: "*/10 * * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    name: Update formula from latest release
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Resolve release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="${{ inputs.tag || '' }}"
+          if [[ -z "${tag}" ]]; then
+            tag="$(gh release view --repo ng-life/ripgrep-web --json tagName --jq .tagName)"
+          fi
+          echo "TAG=${tag}" >> "${GITHUB_ENV}"
+
+      - name: Download release checksums
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p artifacts
+          gh release download "${TAG}" \
+            --repo ng-life/ripgrep-web \
+            --pattern "*.tar.gz.sha256" \
+            --dir artifacts
+          macos_sha256="$(awk '$2 ~ /aarch64-apple-darwin/ {print $1}' artifacts/*.sha256 | tail -n 1)"
+          linux_sha256="$(awk '$2 ~ /x86_64-unknown-linux-gnu/ {print $1}' artifacts/*.sha256 | tail -n 1)"
+          test -n "${macos_sha256}"
+          test -n "${linux_sha256}"
+          echo "MACOS_SHA256=${macos_sha256}" >> "${GITHUB_ENV}"
+          echo "LINUX_SHA256=${linux_sha256}" >> "${GITHUB_ENV}"
+
+      - name: Render formula
+        run: |
+          version="${TAG#v}"
+          cat > Formula/ripgrep-web.rb <<EOF
+          class RipgrepWeb < Formula
+            desc "Lightweight in-process ripgrep web log search service"
+            homepage "https://github.com/ng-life/ripgrep-web"
+            version "${version}"
+            license "MIT"
+
+            on_macos do
+              url "https://github.com/ng-life/ripgrep-web/releases/download/${TAG}/ripgrep-web-${TAG}-aarch64-apple-darwin.tar.gz"
+              sha256 "${MACOS_SHA256}"
+            end
+
+            on_linux do
+              url "https://github.com/ng-life/ripgrep-web/releases/download/${TAG}/ripgrep-web-${TAG}-x86_64-unknown-linux-gnu.tar.gz"
+              sha256 "${LINUX_SHA256}"
+            end
+
+            def install
+              (var/"log/ripgrep-web").mkpath
+              bin.install "ripgrep-web"
+            end
+
+            service do
+              run [opt_bin/"ripgrep-web"]
+              environment_variables LOG_BASE_DIR: var/"log/ripgrep-web",
+                                    LISTEN_ADDR: "127.0.0.1:5000",
+                                    MAX_CONCURRENT_SEARCHES: "4",
+                                    RUST_LOG: "ripgrep_web=info,tower_http=info"
+              keep_alive true
+              log_path var/"log/ripgrep-web.log"
+              error_log_path var/"log/ripgrep-web.log"
+            end
+
+            def caveats
+              <<~EOS
+                The service defaults to searching #{var}/log/ripgrep-web.
+                Start it with:
+                  brew services start #{tap}/ripgrep-web
+              EOS
+            end
+          end
+          EOF
+
+      - name: Validate formula
+        run: |
+          ruby -c Formula/ripgrep-web.rb
+
+      - name: Commit formula
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Formula/ripgrep-web.rb
+          if git diff --cached --quiet; then
+            echo "Formula is already up to date"
+          else
+            git commit -m "Update ripgrep-web formula to ${TAG}"
+            git push
+          fi
