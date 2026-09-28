@@ -3,15 +3,15 @@ class RedisExplorer < Formula
   homepage "https://github.com/ng-life/redis-explorer"
   on_macos do
     on_arm do
-      url "https://github.com/ng-life/redis-explorer/releases/download/v0.1.0/redis-explorer-macos-aarch64"
-      sha256 "6c65f39a9f9e63493234744fc0013be9d37455b6b720bf36544010f1644789dd"
+      url "https://github.com/ng-life/redis-explorer/releases/download/v0.1.1/redis-explorer-macos-aarch64"
+      sha256 "4b0cdcc5c0f82090347d72f411a47f98b91b11172a3751a540a93d951d38a552"
     end
   end
 
   on_linux do
     on_intel do
-      url "https://github.com/ng-life/redis-explorer/releases/download/v0.1.0/redis-explorer-linux-x86_64"
-      sha256 "a0e753a407af9fc60fc488ee774d3356f846f1222eed54c0f1c35c310b0e08e8"
+      url "https://github.com/ng-life/redis-explorer/releases/download/v0.1.1/redis-explorer-linux-x86_64"
+      sha256 "c5c018b3af9707b940ac5fb0a74dae956e2aa98a39bd618b7691086d9ba32d58"
     end
   end
 
